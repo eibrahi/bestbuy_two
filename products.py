@@ -15,7 +15,7 @@ class Product:
         self.name = name
         self.price = price
         self.quantity = quantity
-        self.active = True
+        self.active = quantity > 0
 
     def get_quantity(self) -> int:
         """Return the current quantity of the product."""
@@ -24,8 +24,7 @@ class Product:
     def set_quantity(self, quantity: int) -> None:
         """Set the product quantity and deactivate it when quantity reaches zero."""
         self.quantity = quantity
-        if self.quantity == 0:
-            self.active = False
+        self.active = quantity > 0
 
     def is_active(self) -> bool:
         """Return whether the product is currently active."""
@@ -56,5 +55,6 @@ class Product:
         if not self.active:
             raise ValueError("Product is not active")
 
-        self.quantity -= quantity
+        self.set_quantity(self.quantity - quantity)
+
         return quantity * self.price

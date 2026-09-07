@@ -40,9 +40,11 @@ class Product:
 
     def show(self) -> None:
         """Display the product name, price, and quantity."""
-        print("Name: " + self.name)
-        print("Price: " + str(self.price))
-        print("Quantity: " + str(self.quantity))
+        print(
+            f"Name: {self.name}, "
+            f"Price: {self.price}, "
+            f"Quantity: {self.quantity}"
+        )
 
     def buy(self, quantity: int) -> float:
         """Buy a given quantity of the product and return the total price."""
@@ -58,3 +60,44 @@ class Product:
         self.set_quantity(self.quantity - quantity)
 
         return quantity * self.price
+
+class NonStockedProduct(Product):
+    """Represents a non-stored product in the store."""
+    def __init__(self, name, price):
+        """Initialize a non-stored product with name, price, and 0 Stock."""
+        super().__init__(name, price, 0)
+        self.active = True
+
+    def show(self) -> None:
+        """Display the non-stored product name, price, and quantity."""
+        print(
+            f"Name: {self.name}, "
+            f"Price: {self.price}"
+        )
+
+    def buy(self, quantity: int) -> float:
+        if quantity <= 0:
+            raise ValueError("Quantity cannot be negative")
+        return quantity * self.price
+
+class LimitedProduct(Product):
+    """Represents a limited product in the store."""
+    def __init__(self, name, price, quantity, maximum):
+        """Initialize a limited product with name, price, quantity, and maximum quantity."""
+        super().__init__(name, price, quantity)
+        self.maximum = maximum
+
+    def show(self) -> None:
+        """Display the limited product name, price, and quantity."""
+        print(
+            f"Name: {self.name}, "
+            f"Price: {self.price}, "
+            f"Quantity: {self.quantity}, "
+            f"Maximum order: {self.maximum}"
+        )
+
+    def buy(self, quantity: int) -> float:
+        if quantity >= self.maximum:
+            raise ValueError(f"Quantity {self.name} cannot be greater than the product's maximum quantity")
+
+        return super().buy(quantity)

@@ -1,8 +1,12 @@
+from promotions import Promotion
+
+
 class Product:
     """Represents a product in the store."""
 
     def __init__(self, name, price, quantity):
         """Initialize a product with name, price, quantity, and active status."""
+        self.promotion = None
         if name == "":
             raise ValueError("Product name cannot be empty")
 
@@ -45,6 +49,16 @@ class Product:
             f"Price: {self.price}, "
             f"Quantity: {self.quantity}"
         )
+        if self.promotion:
+            print(f"Promotion: {self.promotion.name}")
+    
+    def set_promotion(self, promotion: Promotion) -> None:
+        """Set the promotion for the product."""
+        self.promotion = promotion
+
+    def get_promotion(self) -> Promotion:
+        """Return the promotion for the product."""
+        return self.promotion
 
     def buy(self, quantity: int) -> float:
         """Buy a given quantity of the product and return the total price."""
@@ -59,7 +73,12 @@ class Product:
 
         self.set_quantity(self.quantity - quantity)
 
-        return quantity * self.price
+        if self.promotion:
+            total_price = self.promotion.apply_promotion(self, quantity)
+        else:
+            total_price = quantity * self.price
+
+        return total_price
 
 class NonStockedProduct(Product):
     """Represents a non-stored product in the store."""
@@ -74,11 +93,19 @@ class NonStockedProduct(Product):
             f"Name: {self.name}, "
             f"Price: {self.price}"
         )
+        if self.promotion:
+            print(f"Promotion: {self.promotion.name}")
 
     def buy(self, quantity: int) -> float:
         if quantity <= 0:
             raise ValueError("Quantity cannot be negative")
-        return quantity * self.price
+
+        if self.promotion:
+            total_price = self.promotion.apply_promotion(self, quantity)
+        else:
+            total_price = quantity * self.price
+
+        return total_price
 
 class LimitedProduct(Product):
     """Represents a limited product in the store."""
@@ -95,9 +122,24 @@ class LimitedProduct(Product):
             f"Quantity: {self.quantity}, "
             f"Maximum order: {self.maximum}"
         )
+        if self.promotion:
+            print(f"Promotion: {self.promotion.name}")
 
     def buy(self, quantity: int) -> float:
-        if quantity >= self.maximum:
+        if not self.active:
+            raise ValueError("Product is not active")
+
+        if quantity > self.maximum:
             raise ValueError(f"Quantity {self.name} cannot be greater than the product's maximum quantity")
 
-        return super().buy(quantity)
+        if quantity > self.quantity:
+            raise ValueError("Quantity cannot be greater than the product's quantity")
+
+        if self.promotion:
+            total_price = self.promotion.apply_promotion(self, quantity)
+        else:
+            total_price = quantity * self.price
+
+        self.set_quantity(self.quantity - quantity)
+
+        return total_price

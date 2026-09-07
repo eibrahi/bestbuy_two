@@ -1,4 +1,5 @@
 from products import Product, NonStockedProduct, LimitedProduct
+from promotions import SecondHalfPrice, ThirdOneFree, PercentDiscount
 from store import Store
 
 
@@ -42,7 +43,14 @@ def make_order(store: Store):
             break
 
         try:
-            selected_product = products_list[int(product_number) - 1]
+            product_number = int(product_number)
+
+            if product_number < 1 or product_number > len(products_list):
+                print("Invalid product number. Please try again.")
+                continue
+
+            selected_product = products_list[product_number - 1]
+
         except (ValueError, IndexError):
             print("Invalid product number. Please try again.")
             continue
@@ -52,10 +60,6 @@ def make_order(store: Store):
 
             if amount <= 0:
                 print("Quantity must be greater than 0.")
-                continue
-
-            if amount > selected_product.get_quantity():
-                print("Not enough stock available.")
                 continue
 
         except ValueError:
@@ -97,12 +101,23 @@ def main():
     """The main command-line interface."""
 
     # setup initial stock of inventory
+    # setup initial stock of inventory
     product_list = [Product("MacBook Air M2", price=1450, quantity=100),
                     Product("Bose QuietComfort Earbuds", price=250, quantity=500),
                     Product("Google Pixel 7", price=500, quantity=250),
                     NonStockedProduct("Windows License", price=125),
                     LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
                     ]
+
+    # Create promotion catalog
+    second_half_price = SecondHalfPrice("Second Half price!")
+    third_one_free = ThirdOneFree("Third One Free!")
+    thirty_percent = PercentDiscount("30% off!", percent=30)
+
+    # Add promotions to products
+    product_list[0].set_promotion(second_half_price)
+    product_list[1].set_promotion(third_one_free)
+    product_list[3].set_promotion(thirty_percent)
     best_buy = Store(product_list)
 
     start(best_buy)

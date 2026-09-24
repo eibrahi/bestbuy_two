@@ -4,6 +4,7 @@ from store import Store
 
 
 def show_menu():
+    """Display the main store menu."""
     print(
         """
         Store Menu
@@ -17,6 +18,7 @@ def show_menu():
 
 
 def show_products(store: Store):
+    """Display all active products in the store."""
     print("______")
     for i, product in enumerate(store.get_all_products(), start=1):
         print(f"{i}. ", end="")
@@ -25,10 +27,12 @@ def show_products(store: Store):
 
 
 def show_total_quantity(store: Store):
+    """Display the total quantity of products in the store."""
     print(f"Total of {store.get_total_quantity()} items in store")
 
 
 def make_order(store: Store):
+    """Create and process a customer order."""
     products_list = store.get_all_products()
     shopping_list = []
 
@@ -78,7 +82,9 @@ def make_order(store: Store):
     except ValueError as error:
         print(f"Order failed: {error}")
 
+
 def start(store: Store):
+    """Start the command-line interface of the store."""
     while True:
         show_menu()
 
@@ -101,13 +107,33 @@ def main():
     """The main command-line interface."""
 
     # setup initial stock of inventory
-    # setup initial stock of inventory
-    product_list = [Product("MacBook Air M2", price=1450, quantity=100),
-                    Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                    Product("Google Pixel 7", price=500, quantity=250),
-                    NonStockedProduct("Windows License", price=125),
-                    LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
-                    ]
+    product_list = [
+        Product(
+            "MacBook Air M2",
+            price=1450,
+            quantity=100
+        ),
+        Product(
+            "Bose QuietComfort Earbuds",
+            price=250,
+            quantity=500
+        ),
+        Product(
+            "Google Pixel 7",
+            price=500,
+            quantity=250
+        ),
+        NonStockedProduct(
+            "Windows License",
+            price=125
+        ),
+        LimitedProduct(
+            "Shipping",
+            price=10,
+            quantity=250,
+            maximum=1
+        ),
+    ]
 
     # Create promotion catalog
     second_half_price = SecondHalfPrice("Second Half price!")

@@ -51,7 +51,7 @@ class Product:
         )
         if self.promotion:
             print(f"Promotion: {self.promotion.name}")
-    
+
     def set_promotion(self, promotion: Promotion) -> None:
         """Set the promotion for the product."""
         self.promotion = promotion
@@ -80,8 +80,10 @@ class Product:
 
         return total_price
 
+
 class NonStockedProduct(Product):
     """Represents a non-stored product in the store."""
+
     def __init__(self, name, price):
         """Initialize a non-stored product with name, price, and 0 Stock."""
         super().__init__(name, price, 0)
@@ -91,7 +93,8 @@ class NonStockedProduct(Product):
         """Display the non-stored product name, price, and quantity."""
         print(
             f"Name: {self.name}, "
-            f"Price: {self.price}"
+            f"Price: {self.price}",
+            f"Quantity: Unlimited"
         )
         if self.promotion:
             print(f"Promotion: {self.promotion.name}")
@@ -107,8 +110,10 @@ class NonStockedProduct(Product):
 
         return total_price
 
+
 class LimitedProduct(Product):
     """Represents a limited product in the store."""
+
     def __init__(self, name, price, quantity, maximum):
         """Initialize a limited product with name, price, quantity, and maximum quantity."""
         super().__init__(name, price, quantity)
@@ -130,7 +135,9 @@ class LimitedProduct(Product):
             raise ValueError("Product is not active")
 
         if quantity > self.maximum:
-            raise ValueError(f"Quantity {self.name} cannot be greater than the product's maximum quantity")
+            raise ValueError(
+                f"Quantity {self.name} cannot be greater than "
+                f"the product's maximum quantity")
 
         if quantity > self.quantity:
             raise ValueError("Quantity cannot be greater than the product's quantity")

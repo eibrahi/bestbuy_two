@@ -1,5 +1,6 @@
 from products import Product
 
+
 class Store:
     """Represents a store with a list of products."""
 
@@ -23,10 +24,19 @@ class Store:
                 result.append(product)
         return result
 
-    def order(self, shopping_list: list[tuple[Product, int]]) -> float:
+    @staticmethod
+    def order(shopping_list: list[tuple[Product, int]]) -> float:
         """Process an order and return the total price."""
-        total_price = 0
+        combined_products = {}
+
         for product, quantity in shopping_list:
+            combined_products[product] = (
+                    combined_products.get(product, 0) + quantity
+            )
+
+        total_price = 0
+
+        for product, quantity in combined_products.items():
             total_price += product.buy(quantity)
 
         return total_price
